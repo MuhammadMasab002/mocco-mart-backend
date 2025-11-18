@@ -1,6 +1,7 @@
 import { User } from "../models/user.models.js";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -59,15 +60,32 @@ const loginUser = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid credentials!" });
         }
+
+        const token = jwt.sign({
+            userId: existingUser._id,
+        }, process.env.JWT_SECRET, {
+            expiresIn: process.env.EXPIRING_TIME
+        });
+
+        existingUser.token = token;
+        await existingUser.save({ validateBeforeSave: false });
+
         const userResponse = {
             _id: existingUser._id,
             username: existingUser.username,
             email: existingUser.email,
+            token
         }
-        return res.status(200).json({
-            message: "Login successful!",
-            user: userResponse,
-        });
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+        return res.status(200)
+            .cookie("token", token, options)
+            .json({
+                message: "Login successful!",
+                user: userResponse,
+            });
     } catch (error) {
         return res.status(500).json({ message: "Server error", error: error.message });
     }

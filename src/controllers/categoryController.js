@@ -22,6 +22,11 @@ const createCategory = async (req, res) => {
       description,
       isActive: isActive ?? true,
     });
+    if (!newCategory) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Failed to create category" });
+    }
     await newCategory.save();
     return res.status(201).json({
       success: true,

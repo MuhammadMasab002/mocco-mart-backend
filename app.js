@@ -1,8 +1,9 @@
-import express from 'express';
-import cors from 'cors';
-import userRouter from './src/routes/userRouter.js';
-import cookieParser from 'cookie-parser';
-import categoryRouter from './src/routes/categoryRouter.js';
+import express from "express";
+import cors from "cors";
+import userRouter from "./src/routes/userRouter.js";
+import cookieParser from "cookie-parser";
+import categoryRouter from "./src/routes/categoryRouter.js";
+import subCategoryRouter from "./src/routes/subCategoryRouter.js";
 
 const app = express();
 
@@ -11,15 +12,14 @@ app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser())
+app.use(cookieParser());
 // app.use(express.static('public'));
 
-
-app.get('/', (req, res) => {
-    res.send('Welcome to Moco Mart API');
-})
-app.use('/api/auth/user', userRouter)
-app.use('/api/admin/categories', categoryRouter)
-
+app.get("/", (req, res) => {
+  res.send("Welcome to Moco Mart API");
+});
+app.use("/api/auth/user", userRouter);
+app.use("/api/admin/categories", categoryRouter);
+app.use("/api/admin/sub-categories", subCategoryRouter);
 
 export default app;

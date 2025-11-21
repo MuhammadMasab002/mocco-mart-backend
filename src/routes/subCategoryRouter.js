@@ -5,12 +5,14 @@ import {
   getAllSubCategories,
   updateSubCategory,
 } from "../controllers/subCategoryController.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const subCategoryRouter = Router();
 
 subCategoryRouter.get("/", getAllSubCategories);
-subCategoryRouter.post("/", createSubCategory);
-subCategoryRouter.put("/:id", updateSubCategory);
-subCategoryRouter.delete("/:id", deleteSubCategory);
+
+subCategoryRouter.post("/", verifyJWT, createSubCategory);
+subCategoryRouter.put("/:id", verifyJWT, updateSubCategory);
+subCategoryRouter.delete("/:id", verifyJWT, deleteSubCategory);
 
 export default subCategoryRouter;

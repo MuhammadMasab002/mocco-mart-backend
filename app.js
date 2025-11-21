@@ -20,8 +20,8 @@ app.get("/", (req, res) => {
   res.send("Welcome to Moco Mart API");
 });
 app.use("/api/auth/user", userRouter);
-app.use("/api/admin/categories", categoryRouter);
-app.use("/api/admin/sub-categories", subCategoryRouter);
-app.use("/api/admin/products", productRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/sub-categories", subCategoryRouter);
+app.use("/api/products", productRouter);
 
 export default app;

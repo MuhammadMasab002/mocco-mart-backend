@@ -4,6 +4,7 @@ import userRouter from "./src/routes/userRouter.js";
 import cookieParser from "cookie-parser";
 import categoryRouter from "./src/routes/categoryRouter.js";
 import subCategoryRouter from "./src/routes/subCategoryRouter.js";
+import productRouter from "./src/routes/productRouter.js";
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.get("/", (req, res) => {
 app.use("/api/auth/user", userRouter);
 app.use("/api/admin/categories", categoryRouter);
 app.use("/api/admin/sub-categories", subCategoryRouter);
+app.use("/api/admin/products", productRouter);
 
 export default app;

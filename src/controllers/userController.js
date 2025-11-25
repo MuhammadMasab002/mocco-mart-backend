@@ -11,10 +11,10 @@ const generateAccessAndRefereshTokens = async (userId) => {
     //    throw new Error("User ID is required to generate token");
     // }
 
-    const accessToken = jwt.sign({ _id: userId }, process.env.JWT_SECRET, {
+    const accessToken = jwt.sign({ _id: userId }, process.env.JWT_ACCESS_SECRET, {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     });
-    const refreshToken = jwt.sign({ _id: userId }, process.env.JWT_SECRET, {
+    const refreshToken = jwt.sign({ _id: userId }, process.env.JWT_REFRESH_SECRET, {
       expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
     });
 

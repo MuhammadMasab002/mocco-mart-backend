@@ -13,14 +13,14 @@ const generateAccessAndRefereshTokens = async (userId) => {
 
     const accessToken = jwt.sign(
       { _id: userId },
-      process.env.JWT_ACCESS_SECRET,
+      process.env.ACCESS_TOKEN_SECRET,
       {
         expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
       }
     );
     const refreshToken = jwt.sign(
       { _id: userId },
-      process.env.JWT_REFRESH_SECRET,
+      process.env.REFRESH_TOKEN_SECRET,
       {
         expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
       }
@@ -93,16 +93,19 @@ const loginUser = async (req, res) => {
         .status(400)
         .json({ success: false, message: "All fields are required!" });
     }
+
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
       return res
         .status(404)
         .json({ success: false, message: "User not found!" });
     }
+
     const isPasswordValid = await bcrypt.compare(
       password,
       existingUser.password
     );
+
     if (!isPasswordValid) {
       return res
         .status(401)
@@ -123,10 +126,12 @@ const loginUser = async (req, res) => {
       email: existingUser.email,
       role: existingUser.role,
     };
+
     const options = {
       httpOnly: true,
       secure: true,
     };
+
     return res
       .status(200)
       .cookie("accessToken", accessToken, options)
@@ -153,7 +158,7 @@ const refreshAccessToken = async (req, res) => {
   try {
     const decodedToken = jwt.verify(
       incomingRefreshToken,
-      process.env.JWT_REFRESH_SECRET
+      process.env.REFRESH_TOKEN_SECRET
     );
 
     const user = await User.findById(decodedToken?._id);
@@ -163,8 +168,6 @@ const refreshAccessToken = async (req, res) => {
     }
 
     if (incomingRefreshToken !== user?.refreshToken) {
-      console.log("user?.refreshToken", user?.refreshToken);
-
       return res
         .status(401)
         .json({ message: "Refresh token is expired or used" });

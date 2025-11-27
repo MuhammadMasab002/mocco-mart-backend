@@ -14,7 +14,7 @@ export const verifyJWT = async (req, res, next) => {
     }
 
     // This will throw an error if token is expired or invalid
-    const decodedToken = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET);
+    const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 
     const user = await User.findById(decodedToken?._id).select(
       "-password -refreshToken"

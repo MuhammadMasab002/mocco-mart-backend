@@ -11,12 +11,20 @@ const generateAccessAndRefereshTokens = async (userId) => {
     //    throw new Error("User ID is required to generate token");
     // }
 
-    const accessToken = jwt.sign({ _id: userId }, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-    });
-    const refreshToken = jwt.sign({ _id: userId }, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-    });
+    const accessToken = jwt.sign(
+      { _id: userId },
+      process.env.JWT_ACCESS_SECRET,
+      {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+      }
+    );
+    const refreshToken = jwt.sign(
+      { _id: userId },
+      process.env.JWT_REFRESH_SECRET,
+      {
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+      }
+    );
 
     const user = await User.findById(userId);
     user.refreshToken = refreshToken;
@@ -54,7 +62,7 @@ const registerUser = async (req, res) => {
       username,
       email,
       password: hashPassword,
-      role: "user"
+      role: "user",
     });
     await newUser.save();
 
@@ -62,7 +70,7 @@ const registerUser = async (req, res) => {
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
-      role: newUser.role
+      role: newUser.role,
     };
 
     return res.status(201).json({
@@ -113,8 +121,7 @@ const loginUser = async (req, res) => {
       _id: existingUser._id,
       username: existingUser.username,
       email: existingUser.email,
-      accessToken,
-      role: existingUser.role
+      role: existingUser.role,
     };
     const options = {
       httpOnly: true,
@@ -133,6 +140,84 @@ const loginUser = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "Server error", error: error.message });
+  }
+};
+
+const refreshAccessToken = async (req, res) => {
+  const incomingRefreshToken =
+    req.cookies.refreshToken || req.body.refreshToken;
+
+  if (!incomingRefreshToken) {
+    return res.status(401).json({ message: "Unauthorized request" });
+  }
+  try {
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.JWT_REFRESH_SECRET
+    );
+
+    const user = await User.findById(decodedToken?._id);
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid refresh token" });
+    }
+
+    if (incomingRefreshToken !== user?.refreshToken) {
+      console.log("user?.refreshToken", user?.refreshToken);
+
+      return res
+        .status(401)
+        .json({ message: "Refresh token is expired or used" });
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(
+      user?._id
+    );
+
+    const userResponse = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    };
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json({
+        success: true,
+        message: "Access token refreshed",
+        user: userResponse,
+      });
+  } catch (error) {
+    console.error("Refresh token error:", error);
+
+    // Handle specific JWT errors
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Refresh token expired. Please login again.",
+      });
+    }
+
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid refresh token.",
+      });
+    }
+
+    return res.status(401).json({
+      success: false,
+      message: "Token refresh failed",
+      error: error.message,
+    });
   }
 };
 
@@ -164,4 +249,4 @@ const logoutUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, logoutUser };
+export { registerUser, loginUser, logoutUser, refreshAccessToken };

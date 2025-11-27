@@ -50,6 +50,7 @@ const getAllCategories = async (req, res) => {
       categories,
     });
   } catch (error) {
+    console.error("Error in getAllCategories:", error);
     res
       .status(500)
       .json({ success: false, message: "Server error", error: error.message });

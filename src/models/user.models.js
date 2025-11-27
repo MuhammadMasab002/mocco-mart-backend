@@ -27,6 +27,10 @@ const userSchema = new Schema(
         ref: "Product",
       },
     ],
+    refreshToken: {
+      type: String,
+      require: true,
+    },
   },
   { timestamps: true }
 );

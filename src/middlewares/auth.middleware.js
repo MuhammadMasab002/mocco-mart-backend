@@ -3,28 +3,53 @@ import { User } from "../models/user.models.js";
 
 export const verifyJWT = async (req, res, next) => {
   try {
-    const token =
+    const accessToken =
       req.cookies.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
-    if (!token) {
+
+    if (!accessToken) {
       return res
         .status(401)
         .json({ success: false, message: "Access denied. No token provided." });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await User.findById(decoded._id);
+    // This will throw an error if token is expired or invalid
+    const decodedToken = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET);
+
+    const user = await User.findById(decodedToken?._id).select(
+      "-password -refreshToken"
+    );
+
     if (!user) {
       return res.status(401).json({
         success: false,
         message: "Invalid Access Token. User not found.",
       });
     }
+
     req.user = user;
     next();
   } catch (error) {
-    return res
-      .status(500)
-      .json({ success: false, message: "Server error", error: error.message });
+    // Handle JWT expiration or invalid token - MUST return 401
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid access token.",
+      });
+    }
+
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Access token expired.",
+      });
+    }
+
+    // Any other error
+    return res.status(401).json({
+      success: false,
+      message: "Authentication failed.",
+      error: error.message,
+    });
   }
 };

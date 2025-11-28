@@ -43,11 +43,14 @@ const createSubCategory = async (req, res) => {
 
 const getAllSubCategories = async (req, res) => {
   try {
-    const categories = await SubCategory.find().sort({ createdAt: -1 });
+    const subCategories = await SubCategory.find()
+      .populate("categoryId", "name") // populate only category name
+      .sort({ createdAt: -1 });
+
     return res.status(200).json({
       success: true,
-      count: categories.length,
-      categories,
+      count: subCategories.length,
+      subCategories,
     });
   } catch (error) {
     res

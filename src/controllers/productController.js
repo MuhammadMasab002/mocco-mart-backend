@@ -43,7 +43,7 @@ const createProduct = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Product created successfully",
-      data: newProduct,
+      products: newProduct,
     });
   } catch (error) {
     res
@@ -54,13 +54,15 @@ const createProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find()
+      .populate("categoryId", "name")
+      .populate("subCategoryId", "name");
     if (!products) {
       return res
         .status(404)
         .json({ success: false, message: "No products found" });
     }
-    res.status(200).json({ success: true, data: products });
+    res.status(200).json({ success: true, products });
   } catch (error) {
     res
       .status(500)
@@ -125,11 +127,11 @@ const updateProduct = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Product not found" });
     }
-    await updatedProduct.save()
+    await updatedProduct.save();
     res.status(200).json({
       success: true,
       message: "Product updated successfully",
-      data: updatedProduct,
+      products: updatedProduct,
     });
   } catch (error) {
     res

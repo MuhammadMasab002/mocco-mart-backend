@@ -42,7 +42,9 @@ const createCategory = async (req, res) => {
 
 const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find().sort({ createdAt: -1 });
+    const categories = await Category.find()
+      .populate("products", "name")
+      .sort({ createdAt: -1 });
 
     return res.status(200).json({
       success: true,

@@ -15,7 +15,7 @@ const createProduct = async (req, res) => {
     if (
       !name &&
       !price &&
-      !description &&
+      // !description &&
       !categoryId &&
       !subCategoryId &&
       !stock
@@ -56,7 +56,8 @@ const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find()
       .populate("categoryId", "name")
-      .populate("subCategoryId", "name");
+      .populate("subCategoryId", "name")
+      .sort({ createdAt: -1 });
     if (!products) {
       return res
         .status(404)

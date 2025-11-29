@@ -1,4 +1,6 @@
 import { Category } from "../models/category.models.js";
+import { Product } from "../models/product.models.js";
+import { SubCategory } from "../models/subCategory.models.js";
 
 const createCategory = async (req, res) => {
   try {
@@ -103,12 +105,24 @@ const deleteCategory = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Category ID is required" });
     }
+    // 1. Delete the category
     const category = await Category.findByIdAndDelete(id);
     if (!category) {
       return res
         .status(404)
         .json({ success: false, message: "Category not found" });
     }
+
+    // 2. Find subcategories under this category
+    const subcategories = await SubCategory.find({ categoryId: id });
+    const subCategoryIds = subcategories.map((sc) => sc._id);
+
+    // 3. Delete all sub-categories belonging to that category
+    await SubCategory.deleteMany({ categoryId: id });
+
+    // 4. Delete all products belonging to these subcategories
+    await Product.deleteMany({ subCategoryId: { $in: subCategoryIds } });
+
     return res.status(200).json({
       success: true,
       message: "Category deleted successfully",

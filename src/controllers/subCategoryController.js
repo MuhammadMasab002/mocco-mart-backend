@@ -1,3 +1,4 @@
+import { Product } from "../models/product.models.js";
 import { SubCategory } from "../models/subCategory.models.js";
 
 const createSubCategory = async (req, res) => {
@@ -104,12 +105,18 @@ const deleteSubCategory = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Sub Category ID is required" });
     }
+
     const category = await SubCategory.findByIdAndDelete(id);
+    console.log("category", category);
     if (!category) {
       return res
         .status(404)
         .json({ success: false, message: "Sub Category not found" });
     }
+
+    // 2. Delete all products belonging to that sub-category
+    await Product.deleteMany({ subCategoryId: id });
+
     return res.status(200).json({
       success: true,
       message: "Sub Category deleted successfully",

@@ -38,10 +38,10 @@ const productSchema = new Schema(
     //   enum: ["in stock", "out of stock", "preorder"],
     //   default: "in stock",
     // },
-    // images: {
-    //   type: String,
-    //   required: true,
-    // },
+    images: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

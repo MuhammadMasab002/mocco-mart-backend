@@ -8,6 +8,7 @@ import {
 } from "../controllers/productController.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { verifyAdmin } from "../middlewares/admin.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const productRouter = Router();
 
@@ -15,7 +16,13 @@ const productRouter = Router();
 productRouter.get("/", getAllProducts);
 productRouter.get("/:id", singleProduct);
 
-productRouter.post("/", verifyJWT, verifyAdmin, createProduct);
+productRouter.post(
+  "/",
+  verifyJWT,
+  verifyAdmin,
+  upload.single("productImage"),
+  createProduct
+);
 productRouter.put("/:id", verifyJWT, verifyAdmin, updateProduct);
 productRouter.delete("/:id", verifyJWT, verifyAdmin, deleteProduct);
 

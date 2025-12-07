@@ -1,11 +1,11 @@
 import { Product } from "../models/product.models.js";
-import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 
 const createProduct = async (req, res) => {
   try {
     const {
       name,
       price,
+      image,
       description,
       categoryId,
       subCategoryId,
@@ -16,6 +16,7 @@ const createProduct = async (req, res) => {
     if (
       !name &&
       !price &&
+      !image &&
       // !description &&
       !categoryId &&
       !subCategoryId &&
@@ -26,17 +27,13 @@ const createProduct = async (req, res) => {
         .json({ success: false, message: "All fields are required!" });
     }
 
-    const localFilePath = req.file ? req.file?.path : null;
-
-    const cloudResponse = await uploadOnCloudinary(localFilePath);
-
     const newProduct = new Product({
       name,
       price,
       description,
       categoryId,
       subCategoryId,
-      image: cloudResponse?.secure_url || "",
+      image,
       stock,
       isActive,
     });
@@ -109,6 +106,7 @@ const updateProduct = async (req, res) => {
       name,
       price,
       description,
+      image,
       categoryId,
       subCategoryId,
       stock,
@@ -124,6 +122,7 @@ const updateProduct = async (req, res) => {
       name,
       price,
       description,
+      image,
       categoryId,
       subCategoryId,
       stock,

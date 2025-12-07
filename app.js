@@ -6,6 +6,7 @@ import categoryRouter from "./src/routes/categoryRouter.js";
 import subCategoryRouter from "./src/routes/subCategoryRouter.js";
 import productRouter from "./src/routes/productRouter.js";
 import wishlistRouter from "./src/routes/wishlistRouter.js";
+import uploadRouter from "./src/routes/uploadRouter.js";
 
 const app = express();
 
@@ -39,5 +40,7 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/sub-categories", subCategoryRouter);
 app.use("/api/products", productRouter);
 app.use("/api/wishlist", wishlistRouter);
+
+app.use("/api/upload-image", uploadRouter);
 
 export default app;

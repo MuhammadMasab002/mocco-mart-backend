@@ -16,13 +16,7 @@ const productRouter = Router();
 productRouter.get("/", getAllProducts);
 productRouter.get("/:id", singleProduct);
 
-productRouter.post(
-  "/",
-  verifyJWT,
-  verifyAdmin,
-  upload.single("productImage"),
-  createProduct
-);
+productRouter.post("/", verifyJWT, verifyAdmin, createProduct);
 productRouter.put("/:id", verifyJWT, verifyAdmin, updateProduct);
 productRouter.delete("/:id", verifyJWT, verifyAdmin, deleteProduct);
 

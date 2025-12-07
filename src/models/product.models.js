@@ -33,6 +33,15 @@ const productSchema = new Schema(
       required: true,
       default: 0,
     },
+    feature: {
+      type: String,
+      enum: ["Flash Sales", "Best Sellers", "New Arrivals", "None"],
+      default: "None",
+    },
+    featureExpireAt: {
+      type: Date,
+      default: null,
+    },
     // stockStatus: {
     //   type: String,
     //   enum: ["in stock", "out of stock", "preorder"],

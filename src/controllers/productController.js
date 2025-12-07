@@ -11,6 +11,8 @@ const createProduct = async (req, res) => {
       subCategoryId,
       stock,
       isActive,
+      feature,
+      featureExpireAt,
     } = req.body;
 
     if (
@@ -20,7 +22,9 @@ const createProduct = async (req, res) => {
       // !description &&
       !categoryId &&
       !subCategoryId &&
-      !stock
+      !stock &&
+      !featureExpireAt &&
+      !feature
     ) {
       return res
         .status(400)
@@ -36,6 +40,8 @@ const createProduct = async (req, res) => {
       image,
       stock,
       isActive,
+      feature,
+      featureExpireAt,
     });
     if (!newProduct) {
       return res
@@ -111,6 +117,8 @@ const updateProduct = async (req, res) => {
       subCategoryId,
       stock,
       isActive,
+      feature,
+      featureExpireAt,
     } = req.body;
 
     if (!id) {
@@ -127,6 +135,8 @@ const updateProduct = async (req, res) => {
       subCategoryId,
       stock,
       isActive,
+      feature,
+      featureExpireAt,
     });
     if (!updatedProduct) {
       return res

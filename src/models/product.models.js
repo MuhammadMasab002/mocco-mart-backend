@@ -35,8 +35,8 @@ const productSchema = new Schema(
     },
     feature: {
       type: String,
-      enum: ["Flash Sales", "Best Sellers", "New Arrivals", "None"],
-      default: "None",
+      enum: ["FLASH_SALES", "BEST_SELLERS", "NEW_ARRIVALS", "NONE"],
+      default: "NONE",
     },
     featureExpireAt: {
       type: Date,
@@ -51,6 +51,10 @@ const productSchema = new Schema(
       type: String,
       // required: true,
     },
+    // discount: {
+    //   type: Number,
+    //   default: 10,
+    // },
   },
   { timestamps: true }
 );

@@ -3,6 +3,7 @@ import {
   createProduct,
   deleteProduct,
   getAllProducts,
+  getFeatureProducts,
   singleProduct,
   updateProduct,
 } from "../controllers/productController.js";
@@ -15,6 +16,7 @@ const productRouter = Router();
 // Define product routes here
 productRouter.get("/", getAllProducts);
 productRouter.get("/:id", singleProduct);
+productRouter.get("/feature/:feature", getFeatureProducts);
 
 productRouter.post("/", verifyJWT, verifyAdmin, createProduct);
 productRouter.put("/:id", verifyJWT, verifyAdmin, updateProduct);

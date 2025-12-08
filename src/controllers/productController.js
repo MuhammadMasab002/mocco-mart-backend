@@ -105,6 +105,24 @@ const singleProduct = async (req, res) => {
   }
 };
 
+const getFeatureProducts = async (req, res) => {
+  try {
+    const { feature } = req.params;
+    // only top 4 feature products
+    const featureProducts = await Product.find({ feature: feature }).limit(4);
+    if (!featureProducts) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No featured products found" });
+    }
+    res.status(200).json({ success: true, products: featureProducts });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
+  }
+};
+
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -188,4 +206,5 @@ export {
   singleProduct,
   updateProduct,
   deleteProduct,
+  getFeatureProducts,
 };

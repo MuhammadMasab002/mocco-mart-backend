@@ -35,7 +35,7 @@ const productSchema = new Schema(
     },
     feature: {
       type: String,
-      enum: ["FLASH_SALES", "BEST_SELLERS", "NEW_ARRIVALS", "NONE"],
+      enum: ["FLASH_SALES", "BEST_SELLING", "NEW_ARRIVALS", "NONE"],
       default: "NONE",
     },
     featureExpireAt: {

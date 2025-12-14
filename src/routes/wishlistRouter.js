@@ -10,7 +10,7 @@ const wishlistRouter = Router();
 
 // Define wishlist routes here
 wishlistRouter.get("/", verifyJWT, getWishlist);
-wishlistRouter.post("/add/:productId", verifyJWT, addToWishlist);
-wishlistRouter.delete("/remove/:productId", verifyJWT, removeFromWishlist);
+wishlistRouter.post("/:productId", verifyJWT, addToWishlist);
+wishlistRouter.delete("/:productId", verifyJWT, removeFromWishlist);
 
 export default wishlistRouter;

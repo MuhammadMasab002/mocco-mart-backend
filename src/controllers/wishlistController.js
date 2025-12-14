@@ -5,6 +5,7 @@ const getWishlist = async (req, res) => {
   try {
     const userId = req.user._id;
     const user = await User.findById(userId).populate("wishlist");
+
     return res.status(200).json({
       success: true,
       wishlist: user.wishlist,

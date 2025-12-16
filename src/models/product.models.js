@@ -48,4 +48,9 @@ const productSchema = new Schema(
   { timestamps: true }
 );
 
+productSchema.pre("save", function () {
+  this.effectivePrice =
+    this.basePrice - (this.basePrice * this.discountPercentage) / 100;
+});
+
 export const Product = mongoose.model("Product", productSchema);

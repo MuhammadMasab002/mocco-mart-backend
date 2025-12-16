@@ -2,59 +2,48 @@ import mongoose, { Schema } from "mongoose";
 
 const productSchema = new Schema(
   {
-    name: {
+    title: {
       type: String,
       required: true,
     },
-    description: {
+    slug: {
       type: String,
-      required: false,
+      required: true,
+      unique: true,
     },
-    price: {
+    description: String,
+
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+
+    brand: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
+    },
+
+    basePrice: {
       type: Number,
       required: true,
     },
+
+    discountPercentage: {
+      type: Number,
+      default: 0,
+    },
+
+    effectivePrice: {
+      type: Number,
+    },
+
+    images: [String],
+
     isActive: {
       type: Boolean,
       default: true,
     },
-    categoryId: {
-      type: Schema.Types.ObjectId,
-      ref: "Category",
-      required: true,
-    },
-    subCategoryId: {
-      type: Schema.Types.ObjectId,
-      ref: "SubCategory",
-      required: true,
-    },
-    stock: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    feature: {
-      type: String,
-      enum: ["FLASH_SALES", "BEST_SELLING", "NEW_ARRIVALS", "NONE"],
-      default: "NONE",
-    },
-    featureExpireAt: {
-      type: Date,
-      default: null,
-    },
-    // stockStatus: {
-    //   type: String,
-    //   enum: ["in stock", "out of stock", "preorder"],
-    //   default: "in stock",
-    // },
-    image: {
-      type: String,
-      // required: true,
-    },
-    // discount: {
-    //   type: Number,
-    //   default: 10,
-    // },
   },
   { timestamps: true }
 );

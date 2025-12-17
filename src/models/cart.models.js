@@ -14,10 +14,10 @@ const cartSchema = new Schema(
           type: Schema.Types.ObjectId,
           ref: "Product",
         },
-        // variant: {
-        //   type: Schema.Types.ObjectId,
-        //   ref: "Variant",
-        // },
+        variant: {
+          type: Schema.Types.ObjectId,
+          ref: "Variant",
+        },
         quantity: Number,
         price: Number,
       },

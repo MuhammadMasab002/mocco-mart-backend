@@ -1,11 +1,7 @@
 import express from "express";
 import cors from "cors";
-import userRouter from "./src/routes/userRouter.js";
 import cookieParser from "cookie-parser";
-import categoryRouter from "./src/routes/categoryRouter.js";
-import productRouter from "./src/routes/productRouter.js";
-import wishlistRouter from "./src/routes/wishlistRouter.js";
-import uploadRouter from "./src/routes/uploadRouter.js";
+import router from "./routes";
 
 const app = express();
 
@@ -31,14 +27,10 @@ app.use(cookieParser());
 //   next();
 // });
 
+// API ROUTES
 app.get("/", (req, res) => {
   res.send("Welcome to Moco Mart API");
 });
-app.use("/api/auth/user", userRouter);
-app.use("/api/categories", categoryRouter);
-app.use("/api/products", productRouter);
-app.use("/api/wishlist", wishlistRouter);
-
-app.use("/api/upload-image", uploadRouter);
+app.use("/api", router);
 
 export default app;

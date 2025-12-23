@@ -252,4 +252,23 @@ const logoutUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+// GET CURRENT USER
+const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select(
+      "-password -refreshToken"
+    );
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    return res.status(200).json({ success: true, user });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
+  }
+};
+
+export { registerUser, loginUser, logoutUser, refreshAccessToken, getMe };

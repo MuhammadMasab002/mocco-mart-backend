@@ -3,6 +3,7 @@ import {
   createCategory,
   deleteCategory,
   getAllCategories,
+  getCategoryBySlug,
   updateCategory,
 } from "../controllers/categoryController.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -12,8 +13,10 @@ const categoryRouter = Router();
 
 categoryRouter.get("/", getAllCategories);
 
+categoryRouter.get("/:slug", getCategoryBySlug);
+
 categoryRouter.post("/", verifyJWT, verifyAdmin, createCategory);
-categoryRouter.put("/:id", verifyJWT, verifyAdmin, updateCategory);
+categoryRouter.patch("/:id", verifyJWT, verifyAdmin, updateCategory);
 categoryRouter.delete("/:id", verifyJWT, verifyAdmin, deleteCategory);
 
 export default categoryRouter;
